@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
-from . models import Listing
+from django.shortcuts import redirect, render
+
 from .forms import ListingForm
+from .models import Listing
+
 
 def listing_list(request):
     listings = Listing.objects.all()
@@ -19,7 +21,7 @@ def listing_retrieve(request, pk):
 def listing_create(request):
     form = ListingForm()
     if request.method == "POST":
-        form = ListingForm(request.POST)
+        form = ListingForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect("/")
@@ -34,7 +36,7 @@ def listing_update(request, pk):
     form = ListingForm(instance=listing)
 
     if request.method == "POST":
-        form = ListingForm(request.POST)
+        form = ListingForm(request.POST, files=request.FILES, instance=Listing)
         if form.is_valid():
             form.save()
             return redirect("/")
